@@ -1,8 +1,9 @@
 import { Circle } from './circle.js';
-import { Point } from './point.js';
 
-const AlphaIncrement = 0.005;
-const MaxAlpha = 2 * 40 * Math.PI;
+const AlphaIncrement = 0.01;
+const MaxAlpha = 2 * Math.PI * 60;
+const RingColor = '#333';
+const SpiroColor = '#00ff00';
 
 const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
@@ -15,16 +16,21 @@ function draw(cogRadius, cogEntryPointSize) {
 	const radiusToCogCenter = ring.radius - cog.radius;
 	const cogRotationFactor = ring.radius / cog.radius;
 
-	ring.draw(context, '#333');
+	ring.draw(context, RingColor);
+
+	context.strokeStyle = SpiroColor;
+	context.beginPath();
 
 	for (let alpha = 0; alpha < MaxAlpha; alpha += AlphaIncrement) {
-
 		cog.center = ring.pointAtAngle(alpha, radiusToCogCenter);
 
 		const beta = -alpha * cogRotationFactor;
 		let cogEntryPoint = cog.pointAtAngle(beta, cogEntryPointSize);
-		cogEntryPoint.draw(context, '#00ff00');
+
+		context.lineTo(cogEntryPoint.x, cogEntryPoint.y);
 	}
+
+	context.stroke();
 }
 
 canvas.addEventListener('mousemove', e => {

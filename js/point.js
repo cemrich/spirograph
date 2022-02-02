@@ -5,12 +5,6 @@ export class Point {
 		this.y = y;
 	}
 
-	draw(context, color) {
-		color = color || 'black';
-		context.fillStyle = color;
-		context.fillRect(this.x, this.y, 1, 1);
-	}
-
 	plus(point) {
 		return new Point(this.x + point.x, this.y + point.y);
 	}
