@@ -42,4 +42,4 @@ canvas.addEventListener('mousemove', e => {
 	draw(cogRadius, cogEntryPointSize);
 });
 
-draw(ring.radius / 3.3, ring.radius / 10);
+draw(ring.radius / 2.24, ring.radius / 2.54);
