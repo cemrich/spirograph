@@ -1,3 +1,4 @@
+import { Circle } from './circle.js';
 import { Point } from './point.js';
 
 const AlphaIncrement = 0.005;
@@ -5,30 +6,23 @@ const MaxAlpha = 2 * 40 * Math.PI;
 
 const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
-const center = new Point(canvas.width/2, canvas.height/2);
-const ringSize = canvas.width / 2;
+const ring = new Circle(canvas.width/2, canvas.height/2, canvas.width/2);
 
 
-function draw(cogSize, cogEntryPointSize) {
-	const radiusToCogCenter = ringSize - cogSize;
-	const cogRotationFactor = ringSize / cogSize;
+function draw(cogRadius, cogEntryPointSize) {
+	const cog = new Circle(0, 0, cogRadius);
+
+	const radiusToCogCenter = ring.radius - cog.radius;
+	const cogRotationFactor = ring.radius / cog.radius;
+
+	ring.draw(context, '#333');
 
 	for (let alpha = 0; alpha < MaxAlpha; alpha += AlphaIncrement) {
 
-		let rawRingPoint = new Point(Math.cos(alpha), Math.sin(alpha));
-
-		let ringPoint = rawRingPoint.scale(ringSize);
-		ringPoint = center.plus(ringPoint);
-		ringPoint.draw(context, '#333');
-
-		let spiroPoint = rawRingPoint.scale(radiusToCogCenter);
-		spiroPoint = center.plus(spiroPoint);
-		//spiroPoint.draw(context, '#ff00ff');
+		cog.center = ring.pointAtAngle(alpha, radiusToCogCenter);
 
 		const beta = -alpha * cogRotationFactor;
-		let cogEntryPoint = new Point(Math.cos(beta), Math.sin(beta));
-		cogEntryPoint = cogEntryPoint.scale(cogEntryPointSize);
-		cogEntryPoint = spiroPoint.plus(cogEntryPoint);
+		let cogEntryPoint = cog.pointAtAngle(beta, cogEntryPointSize);
 		cogEntryPoint.draw(context, '#00ff00');
 	}
 }
@@ -36,10 +30,10 @@ function draw(cogSize, cogEntryPointSize) {
 canvas.addEventListener('mousemove', e => {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 
-	const cogSize = (e.x - canvas.offsetLeft) / 2;
-	const cogEntryPointSize = cogSize * ((e.y - canvas.offsetTop) / canvas.height);
+	const cogRadius = (e.x - canvas.offsetLeft) / 2;
+	const cogEntryPointSize = cogRadius * ((e.y - canvas.offsetTop) / canvas.height);
 
-	draw(cogSize, cogEntryPointSize);
+	draw(cogRadius, cogEntryPointSize);
 });
 
-draw(ringSize / 3.3, ringSize / 10);
+draw(ring.radius / 3.3, ring.radius / 10);
