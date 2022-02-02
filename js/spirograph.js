@@ -34,7 +34,8 @@ function draw(cogRadius, cogEntryPointSize) {
 }
 
 canvas.addEventListener('mousemove', e => {
-	context.clearRect(0, 0, canvas.width, canvas.height);
+	context.fillColor = 'black';
+	context.fillRect(0, 0, canvas.width, canvas.height);
 
 	const cogRadius = (e.x - canvas.offsetLeft) / 2;
 	const cogEntryPointSize = cogRadius * ((e.y - canvas.offsetTop) / canvas.height);
